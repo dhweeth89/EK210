@@ -173,12 +173,6 @@ void loop() {
     minT = currentT;
   }
 
-//This is for lcd display to do its thing 
-//lcd.setCursor(1,0);
-//lcd.print("Incubator EK210");
-//lcd.setCursor(1,1);
-//lcd.print("konichiwaa");
-
 lcd.setCursor(0,0);
 lcd.print("Current temp: ");
 lcd.print(currentT);
@@ -198,27 +192,6 @@ if (StartDisplaying == true)
   lcd.print(avgT);
 }
 
-//Code to keep maxT and minT clean
-//if (StartDisplaying == true && maxT > 37.2)
-//{
-//  lcd.setCursor(0,1);
-//  lcd.print("Max temp: ");
-//  lcd.print(37.2);
-//}
-//
-//if (StartDisplaying == true && minT < 36.8)
-//{
-//  lcd.setCursor(0,2);
-//  lcd.print("Min temp: ");
-//  lcd.print(36.8);
-//}
-
-//This part requires experimenting; we can adjust values as we test
-  //We have the heating element and fan turn off once it reaches a certain temperature
-  //Then it turns on again when it gets closer and then turns off again once it reaches 37
-
-
-
 if (currentT <= 36.83)
 {
   StuffOn = true;
@@ -227,64 +200,6 @@ else
 {
   StuffOn = false;
 }
-
-//Before Crossed37 degrees
-//if (currentT <= 36.85 && StuffOn == false)
-//{
-//  StuffOn = true;
-//}
-//
-//if (currentT >= 37 && StuffOn == true)
-//{
-//  StuffOn = false;
-//}
-
-//Fan and heating element are on if Temperature is pretty low
-//if (currentT >= 36.85 && currentT < 37 && Crossed37 == true)
-//{
-//  StuffOn = true;
-//}
-//
-////Fan and heating element turn off again when Temperature crosses 37; this is for control when the temperature oscillates above 37 degrees
-//if (currentT >= 37)
-//{
-//  StuffOn = false;
-//  Crossed37 = true;  
-//}
-
-
-
-//Fan and heating element turn off when Temperature is approaching 37; this is the part that requires experimenting
-//Happens to both
-//if (currentT < 37)
-//{
-//  StuffOn = false;
-//}
-
-//Fan and heating element turn back on when Temperature is very close to 37; this is for control when the temperature oscillates below 37 degrees
-//if (currentT >= 36.9 && currentT < 37 && StartDisplaying == false)
-//{
-//  StuffOn = true;
-//}
-
-
-
-
-
-//Boolean logic for when the box starts displaying min/max/avg temperatures
-
-//if (currentT >= 36.8 && currentT < 36.9 && StartDisplaying == true)
-//{
-//  StuffOn = true; 
-//}
-
-//if (currentT >= 36.9 && StartDisplaying == true)
-//{
-//  StuffOn = false;
-//}
-
-
-
 
 //Setting a timer
 count++;
