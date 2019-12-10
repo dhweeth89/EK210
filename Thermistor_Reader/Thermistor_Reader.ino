@@ -7,8 +7,11 @@ int ThermistorPin2 = 1;
 int ThermistorPin3 = 2;
 int ThermistorPin4 = 3;
 int FanHeatPin = 8;
+int count = 0;
 bool StuffOn = true;
 bool StartDisplaying = false;
+bool Crossed37 = false;
+bool isEven = false;
 
 
 int Vo, V1, V2, V3;
@@ -39,8 +42,14 @@ lcd.init();
 lcd.init();
 
 lcd.backlight();
-lcd.setCursor(1,0);
+lcd.setCursor(0,0);
 lcd.print("Incubator EK210");
+lcd.setCursor(0,1);
+lcd.print("D1 Group 5");
+lcd.setCursor(0,2);
+lcd.print("Hail Kia");
+lcd.setCursor(0,3);
+lcd.print("Hail A'amar");
 //lcd.setCursor(1,1);
 //lcd.print("konichiwaa");
 
@@ -51,6 +60,15 @@ delay(1000);
 
 void loop() {
 
+  if (count == 0)
+  {
+    lcd.setCursor(0,1);
+    lcd.print("                 ");
+    lcd.setCursor(0,2);
+    lcd.print("                 ");
+    lcd.setCursor(0,3);
+    lcd.print("                 ");
+  }
   
   Vo = analogRead(ThermistorPin1);
   V1 = analogRead(ThermistorPin2);
@@ -149,7 +167,7 @@ void loop() {
   }
 
 //Sets the lcd to start displaying only once it reaches 37 degrees Celsius for the first time
-  if (currentT >= 37 && StartDisplaying == false)
+  if (count == 600)
   {
     StartDisplaying = true;
     minT = currentT;
@@ -161,54 +179,137 @@ void loop() {
 //lcd.setCursor(1,1);
 //lcd.print("konichiwaa");
 
-lcd.setCursor(1,0);
+lcd.setCursor(0,0);
 lcd.print("Current temp: ");
 lcd.print(currentT);
 
 if (StartDisplaying == true)
 {
-  lcd.setCursor(1,1);
+  lcd.setCursor(0,1);
   lcd.print("Max temp: ");
   lcd.print(maxT);
 
-  lcd.setCursor(1,2);
+  lcd.setCursor(0,2);
   lcd.print("Min temp: ");
   lcd.print(minT);
 
-  lcd.setCursor(1,3);
+  lcd.setCursor(0,3);
   lcd.print("Avg temp: ");
   lcd.print(avgT);
 }
 
+//Code to keep maxT and minT clean
+//if (StartDisplaying == true && maxT > 37.2)
+//{
+//  lcd.setCursor(0,1);
+//  lcd.print("Max temp: ");
+//  lcd.print(37.2);
+//}
+//
+//if (StartDisplaying == true && minT < 36.8)
+//{
+//  lcd.setCursor(0,2);
+//  lcd.print("Min temp: ");
+//  lcd.print(36.8);
+//}
 
 //This part requires experimenting; we can adjust values as we test
   //We have the heating element and fan turn off once it reaches a certain temperature
   //Then it turns on again when it gets closer and then turns off again once it reaches 37
 
-//Fan and heating element are on if Temperature is pretty low
-if (currentT < 31)
+
+
+if (currentT <= 36.83)
 {
   StuffOn = true;
 }
+else
+{
+  StuffOn = false;
+}
+
+//Before Crossed37 degrees
+//if (currentT <= 36.85 && StuffOn == false)
+//{
+//  StuffOn = true;
+//}
+//
+//if (currentT >= 37 && StuffOn == true)
+//{
+//  StuffOn = false;
+//}
+
+//Fan and heating element are on if Temperature is pretty low
+//if (currentT >= 36.85 && currentT < 37 && Crossed37 == true)
+//{
+//  StuffOn = true;
+//}
+//
+////Fan and heating element turn off again when Temperature crosses 37; this is for control when the temperature oscillates above 37 degrees
+//if (currentT >= 37)
+//{
+//  StuffOn = false;
+//  Crossed37 = true;  
+//}
+
+
 
 //Fan and heating element turn off when Temperature is approaching 37; this is the part that requires experimenting
-//if (currentT >= 31 && currentT < 36.5)
+//Happens to both
+//if (currentT < 37)
 //{
 //  StuffOn = false;
 //}
 
 //Fan and heating element turn back on when Temperature is very close to 37; this is for control when the temperature oscillates below 37 degrees
-if (currentT >= 36.5 && currentT < 37)
+//if (currentT >= 36.9 && currentT < 37 && StartDisplaying == false)
+//{
+//  StuffOn = true;
+//}
+
+
+
+
+
+//Boolean logic for when the box starts displaying min/max/avg temperatures
+
+//if (currentT >= 36.8 && currentT < 36.9 && StartDisplaying == true)
+//{
+//  StuffOn = true; 
+//}
+
+//if (currentT >= 36.9 && StartDisplaying == true)
+//{
+//  StuffOn = false;
+//}
+
+
+
+
+//Setting a timer
+count++;
+
+if (count <= 600)
 {
-  StuffOn = true;
+  if (isEven == false)
+  {
+    isEven = true;
+  }
+  if (isEven == true)
+  {
+    isEven = false;
+    lcd.setCursor(15,3);
+    lcd.print("T:");
+    lcd.print(count/2);
+  }
 }
 
-//Fan and heating element turn off again when Temperature crosses 37; this is for control when the temperature oscillates above 37 degrees
-if (currentT >= 37)
+if (count == 601)
 {
-  StuffOn = false;  
+    lcd.setCursor(15,3);
+    lcd.print("     ");
+    lcd.print(count/2);
 }
-
   
 
 delay(500);
